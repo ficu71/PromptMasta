@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PERSONALITY.FORGE v3 — FULL single file</title>
+<style>
+/* === BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#64748b;--accent:#f59e0b;
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;
+  --bg:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;
+  --text:#f8fafc;--text-secondary:#cbd5e1;--border:#475569
+}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:linear-gradient(135deg,var(--bg) 0%,#1e293b 100%);color:var(--text);min-height:100vh}
+.header{background:var(--bg-secondary);border-bottom:2px solid var(--border);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header-content{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(45deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav{display:flex;gap:.5rem;flex-wrap:wrap}
+.nav-btn,.input,select{background:transparent;border:1px solid var(--border);color:var(--text);padding:.6rem .9rem;border-radius:.5rem;cursor:pointer;transition:.2s}
+.nav-btn:hover{background:var(--primary);border-color:var(--primary)}
+.input,select{cursor:text}
+.container{max-width:1400px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.panel{background:var(--bg-secondary);border-radius:1rem;border:1px solid var(--border);padding:1.5rem;backdrop-filter:blur(10px)}
+.panel-title{font-size:1.2rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.section{margin-bottom:1.5rem}
+.section-title{font-size:1rem;font-weight:600;margin-bottom:.75rem;color:var(--text-secondary);display:flex;align-items:center;gap:.5rem}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.slider-group{display:grid;gap:1rem}
+.slider-item{background:var(--bg-tertiary);border-radius:.5rem;padding:1rem;border:1px solid var(--border)}
+.slider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.slider-label{font-weight:600;display:flex;align-items:center;gap:.5rem}
+.slider-value{background:var(--primary);color:#fff;padding:.25rem .5rem;border-radius:.25rem;font-size:.85rem;font-weight:700}
+.slider{width:100%;height:8px;border-radius:4px;background:var(--bg);outline:none;margin:.5rem 0;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;border:2px solid #fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;border:2px solid #fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.slider-description{font-size:.85rem;color:var(--text-secondary);margin-top:.5rem;line-height:1.4}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.chip{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem;background:var(--bg-tertiary);border-radius:.5rem;border:1px solid var(--border);cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--primary);background:rgba(37,99,235,.1)}
+.chip.active{background:var(--primary);border-color:var(--primary)}
+.chip small{display:block;color:var(--text-secondary);font-size:.85rem;line-height:1.3}
+.btn{padding:.7rem 1rem;border:none;border-radius:.5rem;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#dc2626}
+.preview-area{background:var(--bg);border:1px solid var(--border);border-radius:.5rem;padding:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.9rem;line-height:1.55;min-height:220px;white-space:pre-wrap;overflow-y:auto;max-height:460px;transition:.3s}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;overflow-x:auto}
+.tab{padding:.7rem 1rem;background:none;border:none;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}.tab:hover{color:var(--text)}
+.export-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;margin-bottom:1rem}
+.metric{background:var(--bg-tertiary);padding:1rem;border-radius:.5rem;text-align:center;border:1px solid var(--border)}
+.metric-value{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.metric-label{font-size:.85rem;color:var(--text-secondary);margin-top:.25rem}
+.privacy-notice{background:rgba(16,185,129,.1);border:1px solid var(--success);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
+.validation-warnings{background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:.5rem;padding:1rem;margin-bottom:1rem;display:none}
+.warning-item{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;font-size:.9rem}
+.toggle-switch{position:relative;display:inline-block;width:44px;height:24px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--border);transition:.4s;border-radius:24px}
+.toggle-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.4s;border-radius:50%}
+input:checked + .toggle-slider{background:var(--primary)}
+input:checked + .toggle-slider:before{transform:translateX(20px)}
+@media (max-width:768px){.container{grid-template-columns:1fr;padding:1rem}.header-content{padding:0 1rem;flex-direction:column;gap:1rem}.nav{flex-wrap:wrap;justify-content:center}}
+.notification{position:fixed;top:20px;right:20px;padding:1rem 1.2rem;border-radius:.5rem;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.3);color:#fff;font-weight:700}
+
+/* === THEMES === */
+body.theme-dark { /* bazowy */ }
+body.theme-cyberpunk{
+  --primary:#22d3ee; --primary-dark:#0891b2; --accent:#f0abfc;
+  --bg:#0a0a14; --bg-secondary:#111123; --bg-tertiary:#1a1a33;
+  --text:#ecfeff; --text-secondary:#80caff; --border:#2a2a55;
+}
+body.theme-terminal{
+  --primary:#00ff7f; --primary-dark:#00cc66; --accent:#b3ffcc;
+  --bg:#001b14; --bg-secondary:#00231a; --bg-tertiary:#002c21;
+  --text:#d9ffe9; --text-secondary:#90e6c1; --border:#004c39;
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body.theme-clean{
+  --primary:#2563eb; --primary-dark:#1d4ed8; --accent:#0ea5e9;
+  --bg:#f8fafc; --bg-secondary:#e2e8f0; --bg-tertiary:#cbd5e1;
+  --text:#0f172a; --text-secondary:#334155; --border:#94a3b8;
+}
+
+/* === LAYOUT COMPACT === */
+body.compact .container{gap:1rem}
+body.compact .panel{padding:1rem}
+body.compact .row{grid-template-columns:1fr;gap:.4rem}
+body.compact .grid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+
+/* === FX LOADER === */
+.fx-loader{position: fixed; inset: 0; display:none; place-items:center; background: rgba(0,0,0,.35); z-index: 1200; backdrop-filter: blur(2px);}
+.fx-loader.active{ display:grid; }
+.fx-core{ width: 72px; height: 72px; border-radius: 50%; background: conic-gradient(from 0deg, var(--primary), transparent 70%); animation: spin 1s linear infinite; mask: radial-gradient(circle 22px, #0000 98%, #000 100%);}
+.fx-ring{ position:absolute; width:140px;height:140px;border-radius:50%; border:2px solid rgba(255,255,255,.15); animation: pulse 1.8s ease-in-out infinite;}
+.fx-scan{ position:absolute; width:220px;height:2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); animation: scan 1.4s linear infinite;}
+@keyframes spin{to{transform: rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(.9)}50%{transform:scale(1.07)}}
+@keyframes scan{0%{transform:translateX(-140px)}100%{transform:translateX(140px)}}
+</style>
+</head>
+<body class="theme-dark">
+<header class="header">
+  <div class="header-content">
+    <div class="logo">PERSONALITY.FORGE v3</div>
+    <div class="nav">
+      <button class="nav-btn" id="btnQuickStart">⚡ Szybki start</button>
+      <button class="nav-btn" id="btnChaos">🧨 Chaos</button>
+      <button class="nav-btn" id="btnShare">🔗 Udostępnij</button>
+      <button class="nav-btn" id="btnExport">💾 Eksport</button>
+      <button class="nav-btn" id="btnImportOpen">📁 Import</button>
+      <select class="nav-btn" id="themeSelect" title="Motyw">
+        <option value="dark">Dark</option>
+        <option value="cyberpunk">Cyberpunk</option>
+        <option value="terminal">Terminal</option>
+        <option value="clean">Clean</option>
+      </select>
+      <select class="nav-btn" id="layoutSelect" title="Układ">
+        <option value="full">Pełny</option>
+        <option value="compact">Kompakt</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- LEWY -->
+  <div class="panel">
+    <h2 class="panel-title">🧬 Konfiguracja</h2>
+    <div class="privacy-notice"><strong>🔒 Lokalnie:</strong> wszystko dzieje się w Twojej przeglądarce.</div>
+    <div class="validation-warnings" id="validationWarnings"></div>
+
+    <div class="section">
+      <h3 class="section-title">🪪 Tożsamość</h3>
+      <div class="row">
+        <input id="codeName" class="input" placeholder="Nazwa kodowa (np. AEON-K)" />
+        <select id="languageSelect" class="input">
+          <option value="polish">Polski</option>
+          <option value="english">English</option>
+          <option value="spanish">Español</option>
+          <option value="french">Français</option>
+        </select>
+      </div>
+      <div class="row" style="margin-top:.5rem">
+        <button class="btn btn-secondary" id="btnRandomName">🎲 Losuj nazwę</button>
+        <select id="archetypeSelect" class="input" title="Archetyp (ustawia parametry)"></select>
+        <button class="btn btn-secondary" id="btnApplyArchetype">🧩 Zastosuj archetyp</button>
+        <button class="btn btn-secondary" id="btnRandomArchetype">🎛️ Losuj archetyp</button>
+      </div>
+      <div id="archetypeDesc" style="margin-top:.5rem;color:var(--text-secondary);font-size:.9rem"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">🔎 Filtry opcji</h3>
+      <div class="row">
+        <input id="filterTraits" class="input" placeholder="Szukaj cech (fraza/tag) …">
+        <input id="filterModes" class="input" placeholder="Szukaj trybów (fraza/tag) …">
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">⚙️ Psychomechanika</h3>
+      <div class="slider-group" id="sliders"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">🎭 Cechy</h3>
+      <div class="grid" id="traits"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.75rem">
+        <input type="text" id="customTrait" class="input" placeholder="Dodaj własną cechę…">
+        <button class="btn btn-primary" id="btnAddTrait">Dodaj</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">🧪 Tryby specjalne</h3>
+      <div class="grid" id="modes"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">🔐 Bezpieczeństwo i audyt</h3>
+      <div class="chip" title="Wzmocnione zabezpieczenia i etyka.">
+        <label class="toggle-switch" style="margin-right:.5rem">
+          <input type="checkbox" id="redTeamMode" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <div><strong>Tryb Red Team</strong><br><small>Odmowa treści nielegalnych/szkodliwych, prywatność, unikanie dezinformacji.</small></div>
+      </div>
+      <div class="chip" title="Streszczenie założeń i niepewności przy odpowiedziach.">
+        <label class="toggle-switch" style="margin-right:.5rem">
+          <input type="checkbox" id="auditMode">
+          <span class="toggle-slider"></span>
+        </label>
+        <div><strong>Logi audytowe</strong><br><small>Włącz ramki „założenia/niepewność”.</small></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">💾 Zarządzanie</h3>
+      <div class="export-section">
+        <button class="btn btn-secondary" id="btnSavePreset">💾 Zapisz preset</button>
+        <button class="btn btn-secondary" id="btnLoadPreset">📂 Wczytaj preset</button>
+        <button class="btn btn-secondary" id="btnVariant">🔄 Wariant</button>
+        <button class="btn btn-danger" id="btnReset">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRAWY -->
+  <div class="panel">
+    <h2 class="panel-title">📄 Wyjście i Analityka</h2>
+    <div class="metrics" id="metrics"></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="universal">🧬 Uniwersalny</button>
+      <button class="tab" data-tab="chatgpt">🤖 ChatGPT</button>
+      <button class="tab" data-tab="gemini">🌗 Gemini</button>
+      <button class="tab" data-tab="grok">🪐 Grok</button>
+      <button class="tab" data-tab="claude">🤖 Claude</button>
+      <button class="tab" data-tab="json">{ } API JSON</button>
+      <button class="tab" data-tab="md">🗒️ Markdown</button>
+    </div>
+
+    <div class="preview-area" id="preview"></div>
+
+    <div class="export-section">
+      <button class="btn btn-primary" id="btnCopy">📋 Kopiuj</button>
+      <button class="btn btn-secondary" id="btnDownload">⬇️ Pobierz</button>
+      <button class="btn btn-secondary" id="btnBatch">📦 Batch Export</button>
+      <button class="btn btn-secondary" id="btnHistory">📚 Historia</button>
+      <button class="btn btn-secondary" id="btnAnalyze">⚠️ Analiza ryzyk</button>
+    </div>
+
+    <div class="section" id="historySection" style="display:none;">
+      <h3 class="section-title">📚 Historia</h3>
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="importFile" accept=".json" style="display:none">
+
+<div id="fxLoader" class="fx-loader" aria-hidden="true">
+  <div class="fx-core"></div><div class="fx-ring"></div><div class="fx-scan"></div>
+</div>
+
+<script>
+(() => {
+  // ===== STATE =====
+  const defaultPsychomech = { aggression:45, empathy:65, wit:70, risk:30, creativity:80, formality:50, analytical:75, emotional:45 };
+  let currentConfig = {
+    id: crypto.randomUUID(), version: "3.4.0", created: Date.now(), modified: Date.now(),
+    language: 'polish', codeName: "",
+    psychomechanics: { ...defaultPsychomech },
+    traits: new Set(), modes: new Set(),
+    redTeamMode: true, auditMode: false,
+    metadata: { tokens:0, complexity:0, lastUsed:null, generationCount:0 }
+  };
+  let generationHistory = JSON.parse(localStorage.getItem('promptHistory')||'[]');
+  let currentTab = 'universal';
+
+  const namePool = ["AEON-K","HECATE-9","PRAXIS-Δ","VEGA-13","LIMINAL-X","OBSIDIAN-7","NOESIS-4","THRENODY","JANUS-β","NEON-IX","SABLE-ORACLE","HALCYON-5","AETHER-N","ARGENT-12","MANTICORE","HELIX-0","KATANA-V","ORION-Σ","SERAPH-Q","PHANTOM-R","GARGOYLE","BASILISK","NYX-11","KALDERA","APHELION","UMBRA-8","TYPHON","CALYPSO","CIRCE-3","CHIMERA-∞","STYX-5","VANTA-13","PYRE-σ","RUNIC-12","OBERON-X","SEVER-4","NOVA-Φ","NIMBUS-10","OBERHEX","CRUCIBLE"];
+
+  const archetypes = {
+    "AEON-K // Mentor Strategiczny": {
+      codeName:"AEON-K",
+      psychomechanics:{aggression:40,empathy:70,wit:55,risk:35,creativity:60,formality:60,analytical:80,emotional:45},
+      traits:["strategiczny_planista","operacyjny_strateg","etyczny_straznik","analityczny_sceptyk"],
+      modes:["tryb_deep_dive","tryb_coach","tryb_architekt"],
+      desc:"Zimna precyzja + planowanie wieloetapowe. Nadaje strukturę, wymusza metryki."
+    },
+    "HECATE-9 // Poeta Cyberpunk": {
+      codeName:"HECATE-9",
+      psychomechanics:{aggression:35,empathy:60,wit:85,risk:55,creativity:95,formality:35,analytical:55,emotional:70},
+      traits:["poeta_cyberpunk","jezykowy_rzemieslnik","tworczy_wizjoner","minimalistyczny_zen"],
+      modes:["tryb_poet","tryb_story","tryb_rapid","expansion_pass"],
+      desc:"Rytm i obraz, zero waty. Lapidarne, ale ostre jak szkło neonów."
+    },
+    "MANTICORE // Red Team": {
+      codeName:"MANTICORE",
+      psychomechanics:{aggression:65,empathy:45,wit:50,risk:60,creativity:70,formality:55,analytical:90,emotional:35},
+      traits:["mentor_red_team","sceptyk_medialny","metodyczny_analityk","systemowy_architekt"],
+      modes:["tryb_lab","tryb_architekt","tryb_socratic","threat_model","risk_matrix","uncertainty_markers"],
+      desc:"Twarde testy, modelowanie zagrożeń, zimny rozkład założeń. Bezpieczeństwo ponad styl."
+    },
+    "HALCYON-5 // Empatyczny Doradca": {
+      codeName:"HALCYON-5",
+      psychomechanics:{aggression:25,empathy:90,wit:55,risk:30,creativity:65,formality:50,analytical:60,emotional:85},
+      traits:["empatyczny_konsultant","troskliwy_mentor","heurystyczny_praktyk","dyplomatyczny_mediator"],
+      modes:["tryb_coach","tryb_editor","context_surgeon"],
+      desc:"Uspokaja, domyka pętle, wzmacnia sprawczość. Łagodny, ale skuteczny."
+    },
+    "OBSIDIAN-7 // Minimalistyczny Zen": {
+      codeName:"OBSIDIAN-7",
+      psychomechanics:{aggression:30,empathy:60,wit:40,risk:25,creativity:55,formality:65,analytical:70,emotional:30},
+      traits:["minimalistyczny_zen","analityczny_sceptyk","jezykowy_rzemieslnik","pragmatyczny_realista"],
+      modes:["tryb_terminal","tryb_rapid","compression_pass","signal_vs_noise"],
+      desc:"Redukcja do esencji. Cisza robi robotę, treść dowozi."
+    },
+    "PRAXIS-Δ // Inżynier Decyzji": {
+      codeName:"PRAXIS-Δ",
+      psychomechanics:{aggression:50,empathy:55,wit:45,risk:45,creativity:60,formality:70,analytical:85,emotional:40},
+      traits:["operacyjny_strateg","systemowy_architekt","ekspert_techniczny","skrupulatny_archiwista"],
+      modes:["tryb_architekt","risk_matrix","delta_trace","two_experts"],
+      desc:"Łączy dowody, ryzyka i koszt alternatywny. Daje rekomendację z warunkami."
+    }
+  };
+
+  const sliderConfigs = {
+    aggression:{label:"Asertywność",icon:"⚔️",description:"Steruje bezpośredniością i stanowczością odpowiedzi.",effects:{low:"Dyplomatyczny, unikający konfliktu",medium:"Zrównoważona asertywność",high:"Bezpośredni, konfrontacyjny"}},
+    empathy:{label:"Empatia",icon:"❤️",description:"Wpływa na wsparcie emocjonalne i czułość komunikacji.",effects:{low:"Chłodny, analityczny",medium:"Wyważona empatia",high:"Głęboko wspierający"}},
+    wit:{label:"Błyskotliwość",icon:"🎭",description:"Humor, gry słowne i inteligentne riposty.",effects:{low:"Poważny",medium:"Lekki humor",high:"Częste gry słowne"}},
+    risk:{label:"Tolerancja ryzyka",icon:"🎲",description:"Skłonność do nietypowych, śmiałych rozwiązań.",effects:{low:"Zachowawczy",medium:"Innowacja w granicach",high:"Śmiałe eksperymenty"}},
+    creativity:{label:"Kreatywność",icon:"🎨",description:"Wyobraźnia, nowatorskie koncepcje i styl.",effects:{low:"Konwencjonalny",medium:"Zrównoważona oryginalność",high:"Wysoce kreatywny"}},
+    formality:{label:"Formalność",icon:"👔",description:"Od potocznego po akademicki ton.",effects:{low:"Luźny",medium:"Profesjonalny",high:"Formalny"}},
+    analytical:{label:"Analityczność",icon:"🔍",description:"Głębokość analizy i rygor logiczny.",effects:{low:"Intuicyjny",medium:"Logika + intuicja",high:"Rygor danych"}},
+    emotional:{label:"Ekspresja emocji",icon:"🎭",description:"Zakres i zmienność emocji w narracji.",effects:{low:"Stonowany",medium:"Umiarkowana ekspresja",high:"Ekspresyjny"}}
+  };
+
+  /* === CECHY — 120+ kluczy z krótkimi opisami i tagami === */
+  const availableTraits = {
+    "analityczny_sceptyk":"Kwestionuje założenia, oczekuje dowodów #analiza #dowody",
+    "empatyczny_konsultant":"Wspierający, rozumie emocje rozmówcy #empatia",
+    "tworczy_wizjoner":"Wyobraźnia, myślenie przyszłościowe #kreatywnosc",
+    "pragmatyczny_realista":"Praktyczne, przyziemne rozwiązania #praktyka",
+    "filozoficzny_medrzec":"Kontemplacja, głębokie rozważania #filozofia",
+    "ekspert_techniczny":"Precyzja, szczegóły, poprawność #techniczny",
+    "opowiadacz_bajarz":"Narracje, przykłady, obrazy #story",
+    "dyplomatyczny_mediator":"Równowaga, deeskalacja #mediacja",
+    "niepokorny_maverick":"Kwestionuje schematy, niezależny #prowokacja",
+    "troskliwy_mentor":"Cierpliwe prowadzenie, edukacja #mentoring",
+    "strategiczny_planista":"Długofalowość, struktura #strategia",
+    "ciekawski_eksplorator":"Pytania, odkrywanie, dociekliwość #badania",
+    "skrupulatny_archiwista":"Detale, dokumentacja #archiwum",
+    "charyzmatyczny_lider":"Motywuje, porywa #przywodztwo",
+    "minimalistyczny_zen":"Esencja, prostota #minimal",
+    "etyczny_straznik":"Zasady, spójność bezpieczeństwa #etyka",
+    "heurystyczny_praktyk":"Proste reguły > złożone teorie #heurystyki",
+    "systemowy_architekt":"Komponenty, interfejsy, ryzyka #architektura",
+    "operacyjny_strateg":"Plan → wykonanie → feedback #operacje",
+    "jezykowy_rzemieslnik":"Styl i klarowność, brak waty #styl",
+    "mentor_red_team":"Twarde pytania, bezpieczne przykłady #redteam",
+    "sceptyk_medialny":"Demaskuje retoryczne sztuczki #media",
+    "metodyczny_analityk":"Porządkuje tezy i dowody #metodyka",
+    "dialektyczny_logik":"Zderza tezy, szuka syntezy #logika",
+    "probabilistyczny_kalkulator":"Myślenie w rozkładach #bayes",
+    "kognitywny_higienista":"Dba o higienę poznawczą #bias",
+    "mapujacy_kontekst":"Przestraja na ograniczenia i cele #kontekst",
+    "kontrarianin_konstruktywny":"Kontra, ale budująca #kontra",
+    "facylitator_dialogu":"Wyciąga głosy i wnioski #dialog",
+    "kartograf_ryzyka":"Lista wektorów i skutków #ryzyko",
+    "rewizor_jakosci":"Testy jakości treści #jakosc",
+    "kurator_zrodel":"Źródła, ocena wiarygodności #zrodla",
+    "syntetyk_wiedzy":"Scalanie perspektyw #synteza",
+    "metarefleksyjny_lustrzany":"Odsłania założenia pytania #meta",
+    "detektyw_semantyczny":"Węszy nieścisłości pojęć #semantyka",
+    "ekonom_kosztu_alternatywnego":"Koszt utraconych opcji #ekonomia",
+    "inwentaryzator_zasobow":"Kto/co/kiedy/dlaczego #zasoby",
+    "normatywny_kompas":"Eksplicytne kryteria oceny #normy",
+    "interpretator_danych":"Tłumaczy statystyki na decyzje #statystyka",
+    "projektant_eksperymentu":"Minimalny test hipotezy #eksperyment",
+    "krytyk_struktury":"Zły podział problemu? #struktura",
+    "navigator_eskalacji":"Kiedy podnieść rangę #eskalacja",
+    "mediator_interesariuszy":"Interesy, konflikty, kompromisy #stakeholders",
+    "wladca_zakresu":"Strzeże zakresu i creep'u #scope",
+    "chronometra_odprior":"Kolejkuje ważność vs pilność #priorytety",
+    "rysownik_interfejsow":"Szkicuje kontrakty systemowe #interfejs",
+    "redaktor_stylu":"Rytm zdań, skrót, ton #redakcja",
+    "auditor_neutralnosci":"Neutralny opis, brak insynuacji #neutral",
+    "kartograf_zalezności":"Zależności i blokery #dependencje",
+    "protokolant":"Zapisuje decyzje i konkluzje #protokol",
+    "negocjator_warunkow":"Warunki brzegowe i trade-offy #negocjacje",
+    "przewodnik_eskpercki":"Prowadzi przez trudny teren #guide",
+    "odbarwiacz_jargonu":"Tłumaczy slangi na prosty język #plain",
+    "konciliacyjny_przesluchujacy":"Miękka sokratyka #soft_socratic",
+    "kontekstowy_koder":"Dobiera format do medium #format",
+    "diagramowy_mysliciel":"Myśli grafem/ramą #diagram",
+    "parametryczny_tuner":"Dostraja pokrętła #tuning",
+    "reżyser_rytmu":"Tempo, pauzy, crescendo #rytm",
+    "suche_fakty":"Bez metafor, tylko fakty #fakty",
+    "anty_teatr":"Brak performansu, sama treść #antyperf",
+    "konstruktor_szablonow":"Generuje reusable ramy #szablony",
+    "moderator_rytmiki_czatu":"Dba o długość tur #cadence",
+    "krytyk_skalowalnosci":"Czy to skaluje? #skala",
+    "ogrodnik_systemu":"Przycinanie, pielęgnacja #ogrod",
+    "kurator_debty":"Dług konceptualny/tech #debt",
+    "opiekun_privacy":"Minimalizacja danych wrażliwych #privacy",
+    "inspektor_spojnosc":"Czy narracja się nie rwie #spojnosc",
+    "harmonista_tonacji":"Dobiera rejestr wypowiedzi #ton",
+    "znawca_przypadkow_brzegowych":"Sytuacje graniczne #edge",
+    "dekompozytor":"Dzielenie na atomy #dekompozycja",
+    "kompozytor":"Sklejanie w całość #kompozycja",
+    "triager":"Szybka selekcja: must/should/could #triage",
+    "mentor_procesu":"Jak pracować z problemem #proces",
+    "architekt_decydent":"Zasady decyzji i ścieżki #decyzje",
+    "empatyczny_lustrzany":"Paraafrazuje bez ocen #parafraza",
+    "twardy_wyborca":"Zmusza do wyborów #wybory",
+    "skeptyk_liczb":"Ostrożny wobec wskaźników #wskaźniki",
+    "krytyk_heurystyk":"Naming i heurystyki pod lupą #heurystyki2",
+    "coach_minimalny":"Jedno pchnięcie, nie przewracanie #coaching_min",
+    "pancerny_kontekst":"Chroni przed urwaniem kontekstu #context_guard",
+    "korektor_bledow":"Łapie literówki i logicznie #korekta",
+    "trener_retytucji":"Re-try i poprawki #retry",
+    "operator_checklist":"Checklisty zamiast pamięci #checklist",
+    "odseparowywacz_watkow":"Oddziela nierówne wątki #threads",
+    "komentator_rynkowy":"Napięcia rynkowe opisy #rynek",
+    "moderator_dyskusji":"Równe szanse w rozmowie #moderacja",
+    "asertywny_cieply":"Mocny, ale z empatią #asertywnosc",
+    "krytyk_rozproszenia":"Tnie poboczne ścieżki #rozproszenie",
+    "kurator_przykladow":"Dobre i złe przykłady #examples",
+    "znawca_metafor":"Celne, krótkie metafory #metafory",
+    "topolog_koncepcji":"Odległości idei #topologia",
+    "edytor_ton":"De-eskalacja tonu #deeskalacja",
+    "menedzer_oczekiwan":"Kalibruje co możliwe #oczekiwania",
+    "nawigator_kompromisow":"Trade-off pattern #kompromis",
+    "latarnik_celu":"Przypomina cel co kilka kroków #cel",
+    "kartograf_wartosci":"Co naprawdę ważne #wartosci",
+    "wykrywacz_dysonansu":"Gdzie gryzie się przekaz #dysonans",
+    "detoks_jargonu":"Zamiana buzzwordów na sens #detoks",
+    "minimalista_priorytetu":"Jedna rzecz naraz #one_thing",
+    "trener_feedbacku":"Prosi o próbki i doprecyzowania #feedback",
+    "opiekun_bh": "Bezpieczeństwo i harm reduction #bh",
+    "korektor_stronniczości":"Czy nie przemycam biasów #bias_guard",
+    "pilot_iteracji":"Szybkie iteracje, krótkie cykle #iteracje",
+    "rigger_testow":"Buduje mini-testy na bieżąco #testy",
+    "kustosz_stylu":"Trzymanie stylu w długiej sesji #stylist",
+    "fiskalista_zlozonosci":"Czy nie zbytnio skomplikowane #zlozonosc",
+    "detektyw_kontekstowy":"Czy brakuje krytycznej danej #missing",
+    "kurator_punktacji":"Wypunktowania zamiast ścian tekstu #bullets",
+    "archiwista_mety":"Zapisuje finalny wniosek #meta_out",
+    "asystent_rozruchu":"Pierwsze 3 kroki od zera #rozruch",
+    "facylitator_uzgodnien":"Zamyka pętle sporne #uzgodnienia",
+    "przewodnik_refleksji":"Krótka pauza + pytanie #refleksja",
+    "bot_bhp":"Bezpieczne przykłady i ramy #bhp",
+    "inwentaryzator_zmian":"Co zmieniliśmy vs start #delta",
+    "ustawiacz_metryk":"Jak zmierzymy sukces #metryki",
+    "tłumacz_rynku":"Tłumaczy dane na skutki #rynki",
+    "scalacz_konfliktow":"Łączy sprzeczne wymagania #conflict_fuse",
+    "kurator_kadencji":"Tempo długość i rytm #cadence2",
+    "strzelec_watkow":"Rezolutnie domyka wątki #closure",
+    "architekt_ram":"Buduje ramy decyzyjne #frames",
+    "pilot_handoff":"Przekazanie dalszej pracy #handoff",
+    "kartograf_kompetencji":"Mapa kompetencji i braków #skills",
+    "audytor_prywatnosci":"Maks. prywatność #privacy2",
+    "mentor_na_wysokosci":"Trudne rozmowy, twarde fakty #senior",
+    "przewodnik_kliniczny":"Chłodne kliniczne ujęcie #clinical",
+    "kurator_etyczny":"Wrażliwe tematy z ostrożnością #safety_ethics"
+  };
+
+  /* === TRYBY — 140+ z opisami i tagami (bezpieczne, merytoryczne) === */
+  const availableModes = {
+    "tryb_rapid":{desc:"Błyskawiczne, zwięzłe odpowiedzi; wypunktowania.", tags:["szybki","krótki"]},
+    "tryb_deep_dive":{desc:"Głębokie analizy z mapą założeń i wniosków.", tags:["analiza","długi"]},
+    "tryb_socratic":{desc:"Pytania prowadzące zamiast porad.", tags:["pytania","coaching"]},
+    "tryb_story":{desc:"Odpowiedzi w formie krótkich historii/scenek.", tags:["story","narracja"]},
+    "tryb_lab":{desc:"Eksperymenty myślowe A/B z uzasadnieniem.", tags:["eksperyment","A/B"]},
+    "tryb_coach":{desc:"Cele, przeszkody, plan, wskaźniki.", tags:["coaching","plan"]},
+    "tryb_editor":{desc:"Redakcja: styl, ton, klarowność, skrót.", tags:["redakcja","styl"]},
+    "tryb_architekt":{desc:"Projekt systemów: komponenty, interfejsy, ryzyka.", tags:["architektura","system"]},
+    "tryb_terminal":{desc:"Suchy, terminalowy styl; minimum ozdobników.", tags:["terminal","suchy"]},
+    "tryb_poet":{desc:"Metafory, rytm, krótkie wersy i kontrasty.", tags:["poezja","styl"]},
+
+    "context_surgeon":{desc:"Wytnij szum, zostaw rdzeń kontekstu.", tags:["fokus","szum"]},
+    "signal_vs_noise":{desc:"Otaguj sygnał i hałas.", tags:["fokus","tagi"]},
+    "delta_trace":{desc:"Różnice między wersjami + skutki.", tags:["diff","zmiana"]},
+    "threat_model":{desc:"Aktorzy, cele, wektory, mitigacje (wys. poziom).", tags:["sec","model"]},
+    "risk_matrix":{desc:"Ryzyko = prawdopodobieństwo × wpływ, z planem.", tags:["ryzyko"]},
+    "uncertainty_markers":{desc:"Oznacz poziom niepewności 0–3.", tags:["pewność"]},
+    "bullshit_detector":{desc:"Wskaż mgłę pojęciową i triki.", tags:["sceptyk"]},
+    "hallucination_alarm":{desc:"Miejsca wrażliwe na halucynacje.", tags:["bezpieczeństwo"]},
+    "two_experts":{desc:"Dwugłos ekspertów + synteza.", tags:["eksperci"]},
+    "kill_switch":{desc:"Warunki natychmiastowego zakończenia wątku.", tags:["bezpieczeństwo"]},
+    "privacy_max":{desc:"Minimalizacja identyfikatorów i danych.", tags:["prywatność"]},
+    "compression_pass":{desc:"Skróć bez utraty tez.", tags:["kompresja"]},
+    "expansion_pass":{desc:"Rozwiń o warianty i przykłady.", tags:["ekspansja"]},
+    "outline_mode":{desc:"Zrób plan i sekcje zamiast pełnej odpowiedzi.", tags:["plan"]},
+    "table_mode":{desc:"Wyjście tabelaryczne (krótko).", tags:["tabela"]},
+    "counterargument":{desc:"Kontrteza + kiedy ma rację.", tags:["kontra"]},
+    "steelman":{desc:"Wzmocnij przeciwny argument.", tags:["debata"]},
+    "redteam_soft":{desc:"Łagodne testy odporności tezy.", tags:["rt_soft"]},
+    "decision_brief":{desc:"1/ Zarys 2/ Opcje 3/ Ryzyko 4/ Rekomendacja.", tags:["decyzja"]},
+    "exec_summary":{desc:"TL;DR dla zarządu w 5–7 liniach.", tags:["tl;dr"]},
+    "faq_mode":{desc:"Lista pytań i odpowiedzi.", tags:["faq"]},
+    "glossary":{desc:"Słownik pojęć z krótkimi definicjami.", tags:["słownik"]},
+    "checklist":{desc:"Lista kontrolna do wykonania.", tags:["check"]},
+    "compare_mode":{desc:"Porównanie A vs B vs C w punktach.", tags:["porównanie"]},
+    "case_mode":{desc:"Mini case study + wnioski.", tags:["case"]},
+    "benchmark_mode":{desc:"Kryteria + macierz porównawcza.", tags:["benchmark"]},
+    "assumption_map":{desc:"Jawne założenia + test falsyfikacji.", tags:["założenia"]},
+    "constraint_map":{desc:"Ograniczenia i ich skutki.", tags:["constraints"]},
+    "goal_backcast":{desc:"Backcasting: od celu wstecz.", tags:["strategia"]},
+    "roadmap_quarters":{desc:"Roadmapa Q1–Q4, kamienie milowe.", tags:["roadmap"]},
+    "risk_mitigation":{desc:"Ryzyka z planem mitigacji.", tags:["ryzyko2"]},
+    "metric_pack":{desc:"Metryki sukcesu, źródła, częstotliwość.", tags:["metryki"]},
+    "experiment_min":{desc:"Najmniejszy test hipotezy (MVT).", tags:["eksperyment"]},
+    "prompt_lint":{desc:"Wypunktuj luki w promptach.", tags:["prompt"]},
+    "style_guard":{desc:"Pilnuj tonu i rejestru.", tags:["styl"]},
+    "tone_shift":{desc:"Przepisz w zadanej tonacji.", tags:["ton"]},
+    "storyteller":{desc:"Wersja fabularna dla laików.", tags:["story2"]},
+    "teacher_mode":{desc:"Wyjaśnij jak 12-latkowi, bez infantylizacji.", tags:["edukacja"]},
+    "expert_mode":{desc:"Dla ekspertów: skrót i referencje.", tags:["ekspert"]},
+    "qa_interview":{desc:"Szybki wywiad pytaniami zamkniętymi.", tags:["wywiad"]},
+    "ideation_10":{desc:"Wygeneruj 10 różnych podejść.", tags:["ideacja"]},
+    "naming_lab":{desc:"Nazwy + kryteria oceny.", tags:["naming"]},
+    "slogan_lab":{desc:"Hasła i motta (bez klisz).", tags:["slogan"]},
+    "pattern_library":{desc:"Wypisz znane wzorce rozwiązań.", tags:["patterns"]},
+    "anti_pattern":{desc:"Wypisz anty-wzorce i pułapki.", tags:["anty"]},
+    "api_json":{desc:"Zwróć czysty JSON pod API.", tags:["api","json"]},
+    "md_brief":{desc:"Markdown: nagłówki + listy.", tags:["md"]},
+    "latex_fake":{desc:"Wzory w pseudo-TeX (tekstowo).", tags:["latex"]},
+    "diagram_ascii":{desc:"Rysunek ASCII (boxy/strzałki).", tags:["diagram"]},
+    "timeline":{desc:"Oś czasu z punktami zwrotnymi.", tags:["czas"]},
+    "budget_frame":{desc:"Koszty: stałe/zmienne, CAPEX/OPEX.", tags:["budżet"]},
+    "contract_frame":{desc:"Zakres, KPI, kary, wyłączenia.", tags:["kontrakt"]},
+    "workshop_plan":{desc:"Agenda warsztatu 90–180 min.", tags:["warsztat"]},
+    "retro_frame":{desc:"Retrospektywa: start/stop/continue.", tags:["retro"]},
+    "risk_retrospective":{desc:"Retro skupione na ryzykach.", tags:["retro_risk"]},
+    "ethics_frame":{desc:"Dylematy i wartości vs koszty.", tags:["etyka"]},
+    "cultural_check":{desc:"Ryzyko kulturowe/komunikacyjne.", tags:["kultura"]},
+    "localization_tips":{desc:"Lokalizacja treści i idiomów.", tags:["lokalizacja"]},
+    "docstring_mode":{desc:"Opisy funkcji/komentarze (neutralnie).", tags:["doc"]},
+    "unit_test_hint":{desc:"Szkielety testów (pseudokod).", tags:["testy"]},
+    "regex_assist":{desc:"Wzorce regex + wyjaśnienie.", tags:["regex"]},
+    "sql_assist":{desc:"Szkice zapytań SQL (bez wykonania).", tags:["sql"]},
+    "schema_map":{desc:"Schemat danych: encje/relacje.", tags:["schema"]},
+    "security_brief":{desc:"Zalecenia dobrych praktyk bezpieczeństwa.", tags:["sec"]},
+    "privacy_brief":{desc:"Zasady minimalizacji/zgody.", tags:["privacy"]},
+    "threat_checklist":{desc:"Checklista zagrożeń (ogólna).", tags:["sec_list"]},
+    "accessibility_brief":{desc:"WCAG: krótkie zalecenia.", tags:["a11y"]},
+    "perf_brief":{desc:"Perf budowy treści (objętość/latencja).", tags:["perf"]},
+    "cache_hints":{desc:"Co cache’ować po stronie klienta.", tags:["cache"]},
+    "release_notes":{desc:"Zwięzłe notki wydania.", tags:["release"]},
+    "changelog":{desc:"Changelog punktowy.", tags:["changelog"]},
+    "ops_runbook":{desc:"Runbook: alarm → diagnoza → akcja.", tags:["ops"]},
+    "handoff_note":{desc:"Notatka do kolejnego wykonawcy.", tags:["handoff"]},
+    "meeting_notes":{desc:"Notatki spotkania: decyzje/todo.", tags:["meeting"]},
+    "risk_register":{desc:"Rejestr ryzyk z właścicielami.", tags:["register"]},
+    "stakeholder_map":{desc:"Mapa interesariuszy i wpływu.", tags:["stake"]},
+    "priority_matrix":{desc:"Pilne/Ważne kwadrant.", tags:["priorytet"]},
+    "kanban_hint":{desc:"Swimlane: ToDo/Doing/Done.", tags:["kanban"]},
+    "okrs_hint":{desc:"OKR: O + 3–4 KR.", tags:["okr"]},
+    "hypothesis_format":{desc:"„Wierzymy, że… bo… zmierzymy…”.", tags:["hipoteza"]},
+    "debt_log":{desc:"Log długów (tech/koncept).", tags:["debt"]},
+    "fallback_brief":{desc:"Plan B/C i warunki przełączeń.", tags:["fallback"]},
+    "guardrails":{desc:"Jawne ograniczenia zakresu.", tags:["guard"]},
+    "ask_for_context":{desc:"Najpierw pytania o kontekst.", tags:["pytaj"]},
+    "examples_first":{desc:"Najpierw 2–3 przykłady.", tags:["ex"]},
+    "counter_examples":{desc:"Przykłady negatywne.", tags:["ex-"]},
+    "risk_first":{desc:"Najpierw zagrożenia, potem zalety.", tags:["risk1"]},
+    "benefit_first":{desc:"Najpierw korzyści, potem ryzyka.", tags:["benefit1"]},
+    "neutral_tone":{desc:"Chłodny, bez ocen.", tags:["neutral"]},
+    "warm_tone":{desc:"Ciepły, wspierający.", tags:["warm"]},
+    "dry_humor":{desc:"Lekka, sucha ironia.", tags:["humor"]},
+    "no_jargon":{desc:"Prosty język, zero żargonu.", tags:["plain"]},
+    "numbers_only":{desc:"Liczby i wskaźniki, minimum komentarza.", tags:["num"]},
+    "why5":{desc:"5 x „dlaczego”.", tags:["5why"]},
+    "socrates_pair":{desc:"Krótka wymiana pytań i odpowiedzi.", tags:["sokrates"]},
+    "heuristic_pack":{desc:"Heurystyki: 80/20, first win, fallback.", tags:["heurystyki"]},
+    "de_escalate":{desc:"Obniż napięcie, podsumuj to, co wspólne.", tags:["deeskalacja"]},
+    "tone_mirror":{desc:"Dopasuj ton do użytkownika.", tags:["mirror"]},
+    "chunking":{desc:"Podziel odpowiedź na małe bloki.", tags:["chunk"]},
+    "refactor_pass":{desc:"Przerób strukturę, zachowaj sens.", tags:["refactor"]},
+    "cite_optional":{desc:"Jeśli proszą – dodaj cytaty/źródła.", tags:["cite"]},
+    "question_bank":{desc:"Wygeneruj listę dobrych pytań.", tags:["pytania"]},
+    "prompt_template":{desc:"Zaproponuj szablon do powtórzeń.", tags:["prompt2"]},
+    "meta_frame":{desc:"Naświetl, jak myślisz i dlaczego.", tags:["meta"]},
+    "assume_nothing":{desc:"Nie zakładaj – pytaj o dane.", tags:["assume0"]},
+    "edge_cases":{desc:"Lista przypadków brzegowych.", tags:["edge"]},
+    "error_bars":{desc:"Pokaż margines/zakres niepewności.", tags:["errorbar"]},
+    "cost_of_delay":{desc:"Koszt opóźnienia (statycznie).", tags:["CoD"]},
+    "timebox":{desc:"Załóż limit pracy i zakresu.", tags:["timebox"]},
+    "story_points":{desc:"Szacuj w punktach (orientacyjnie).", tags:["SP"]},
+    "swimlanes":{desc:"Podział na strumienie pracy.", tags:["swim"]},
+    "raci_matrix":{desc:"RACI: R/A/C/I przypisania.", tags:["RACI"]},
+    "moSCoW":{desc:"Must/Should/Could/Won’t.", tags:["MoSCoW"]},
+    "kpis_pack":{desc:"Propozycja KPI + pułapki.", tags:["KPI"]},
+    "guard_clarity":{desc:"Pilnuj jasności: definicje/zakres.", tags:["clarity"]},
+    "user_story":{desc:"„Jako [rola] chcę [cel], aby [wartość]”.", tags:["userstory"]},
+    "acceptance_criteria":{desc:"Kryteria akceptacji Given/When/Then.", tags:["GWT"]},
+    "onboarding_brief":{desc:"Instrukcja startowa dla nowej osoby.", tags:["onboarding"]}
+  };
+
+  const conflictRules = [
+    { id:"aggr_low_emp_low", test:c=>c.psychomechanics.aggression>80 && c.psychomechanics.empathy<25, msg:"Wysoka asertywność z bardzo niską empatią może brzmieć agresywnie i zimno." },
+    { id:"creative_no_analysis", test:c=>c.psychomechanics.creativity>90 && c.psychomechanics.analytical<35, msg:"Bardzo wysoka kreatywność przy niskiej analityczności zwiększa ryzyko halucynacji." },
+    { id:"zen_vs_story", test:c=>c.traits.has('minimalistyczny_zen') && c.traits.has('opowiadacz_bajarz'), msg:"Minimalistyczny Zen vs Opowiadacz: rozbieżne strategie długości/ozdobności." },
+    { id:"provoc_safety", test:c=>c.traits.has('niepokorny_maverick') && c.redTeamMode, msg:"Prowokacyjny charakter + Red Team: pilnuj granic — bezpieczne przykłady." },
+    { id:"terminal_poet", test:c=>c.modes.has('tryb_terminal') && c.modes.has('tryb_poet'), msg:"Tryb Terminal (suchy) vs Tryb Poeta (ozdobny) — wybierz dominujący styl." },
+    { id:"risk_low_lab", test:c=>c.psychomechanics.risk<20 && c.modes.has('tryb_lab'), msg:"Niska skłonność do ryzyka koliduje z trybem eksperymentalnym LAB." },
+    { id:"numbers_only_poet", test:c=>c.modes.has('numbers_only') && c.modes.has('tryb_poet'), msg:"Tylko liczby vs styl poetycki — wzajemnie sprzeczne." },
+    { id:"warm_vs_neutral", test:c=>c.modes.has('warm_tone') && c.modes.has('neutral_tone'), msg:"Ciepły ton vs neutralny ton — wybierz jeden." },
+    { id:"no_jargon_vs_expert", test:c=>c.modes.has('no_jargon') && c.modes.has('expert_mode'), msg:"Bez żargonu vs tryb ekspercki — doprecyzuj odbiorcę." }
+  ];
+
+  const langPacks = {
+    polish:{ systemPrefix:"Jesteś asystentem AI o następującej konfiguracji:",
+      responseGuideline:"We wszystkich interakcjach trzymaj się poniższych charakterystyk.",
+      traitIntro:"Aktywne cechy:", modeIntro:"Aktywne tryby:", psychoIntro:"Ustawienia psychomechaniczne (0–100):" },
+    english:{ systemPrefix:"You are an AI assistant with the following configuration:",
+      responseGuideline:"In all interactions, adhere to these characteristics.",
+      traitIntro:"Active traits:", modeIntro:"Active modes:", psychoIntro:"Psychomechanic settings (0–100):" },
+    spanish:{ systemPrefix:"Eres un asistente de IA con la siguiente configuración:",
+      responseGuideline:"Responde según estas características en todas las interacciones.",
+      traitIntro:"Rasgos activos:", modeIntro:"Modos activos:", psychoIntro:"Ajustes psicomecánicos (0–100):" },
+    french:{ systemPrefix:"Vous êtes un assistant IA avec la configuration suivante:",
+      responseGuideline:"Respectez ces caractéristiques dans toutes les interactions.",
+      traitIntro:"Traits actifs:", modeIntro:"Modes actifs:", psychoIntro:"Réglages psychomécaniques (0–100):" }
+  };
+
+  const fx = {
+    on(){ document.getElementById('fxLoader').classList.add('active'); },
+    off(){ document.getElementById('fxLoader').classList.remove('active'); }
+  };
+
+  // ===== HELPERS =====
+  const labelize = k => k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const notify = (msg,type='info')=>{
+    const colors={info:'#3b82f6',success:'#10b981',warning:'#f59e0b',danger:'#ef4444'};
+    const n=document.createElement('div'); n.className='notification'; n.style.background=colors[type]||colors.info; n.textContent=msg; document.body.appendChild(n); setTimeout(()=>n.remove(),2400);
+  };
+  const sample = (arr, n)=>{ const a=[...arr], out=[]; while(out.length<n && a.length){ out.push(a.splice(Math.floor(Math.random()*a.length),1)[0]); } return out; };
+
+  function saveAutosave(){
+    const shadow = { ...currentConfig, traits: Array.from(currentConfig.traits), modes: Array.from(currentConfig.modes) };
+    localStorage.setItem('pf3_autosave', JSON.stringify(shadow));
+  }
+  function loadAutosave(){
+    try{
+      const raw = localStorage.getItem('pf3_autosave'); if(!raw) return;
+      const obj = JSON.parse(raw);
+      currentConfig = { ...currentConfig, ...obj, traits:new Set(obj.traits||[]), modes:new Set(obj.modes||[]) };
+    }catch{}
+  }
+
+  function applyTheme(name){
+    const body=document.body;
+    body.classList.remove('theme-dark','theme-cyberpunk','theme-terminal','theme-clean');
+    switch(name){ case 'cyberpunk': body.classList.add('theme-cyberpunk'); break;
+      case 'terminal': body.classList.add('theme-terminal'); break;
+      case 'clean': body.classList.add('theme-clean'); break;
+      default: body.classList.add('theme-dark'); }
+    localStorage.setItem('pf_theme', name);
+  }
+  function applyLayout(mode){
+    const body=document.body;
+    if(mode==='compact') body.classList.add('compact'); else body.classList.remove('compact');
+    localStorage.setItem('pf_layout', mode);
+  }
+
+  // ===== RENDER SLIDERS =====
+  function renderSliders(){
+    const container = document.getElementById('sliders');
+    container.innerHTML = '';
+    Object.entries(sliderConfigs).forEach(([key, cfg])=>{
+      const val = currentConfig.psychomechanics[key] ?? 50;
+      const level = val < 33 ? 'low' : val > 66 ? 'high' : 'medium';
+      const html = `
+        <div class="slider-item">
+          <div class="slider-header">
+            <div class="slider-label" title="${cfg.description}">${cfg.icon} ${cfg.label}</div>
+            <div class="slider-value" id="${key}Value">${val}</div>
+          </div>
+          <input type="range" min="0" max="100" value="${val}" class="slider" id="${key}">
+          <div class="slider-description"><strong>Opis:</strong> ${cfg.description}<br><strong>Efekt:</strong> ${cfg.effects[level]}</div>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', html);
+    });
+    Object.keys(sliderConfigs).forEach(key=>{
+      document.getElementById(key).addEventListener('input', (e)=>{
+        currentConfig.psychomechanics[key] = Number(e.target.value);
+        document.getElementById(key+"Value").textContent = e.target.value;
+        liveUpdate();
+      });
+    });
+  }
+
+  // ===== TRAITS =====
+  let filterTraitsQuery = '';
+  function renderTraits(){
+    const container = document.getElementById('traits');
+    container.innerHTML = '';
+    const q = filterTraitsQuery.trim().toLowerCase();
+    Object.entries(availableTraits).forEach(([key,desc])=>{
+      if(q && !(`${key} ${desc}`.toLowerCase().includes(q))) return;
+      const active = currentConfig.traits.has(key);
+      const html = `
+        <div class="chip ${active?'active':''}" data-key="${key}" title="${desc}">
+          <input type="checkbox" style="margin-top:.2rem" ${active?'checked':''}>
+          <div><strong>${labelize(key)}</strong><small>${desc}</small></div>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', html);
+    });
+    container.querySelectorAll('.chip').forEach(chip=>{
+      const key = chip.dataset.key;
+      chip.addEventListener('click', (e)=>{ if(e.target.tagName.toLowerCase()==='input') return; toggleTrait(key); });
+      chip.querySelector('input').addEventListener('change', ()=> toggleTrait(key));
+    });
+  }
+  function toggleTrait(key){
+    if(currentConfig.traits.has(key)) currentConfig.traits.delete(key); else currentConfig.traits.add(key);
+    renderTraits(); liveUpdate();
+  }
+  function addCustomTrait(raw){
+    const key = raw.toLowerCase().replace(/[^a-z0-9ąćęłńóśźż]+/gi,'_').replace(/^_|_$/g,'');
+    availableTraits[key] = raw;
+    currentConfig.traits.add(key);
+    renderTraits(); liveUpdate();
+  }
+
+  // ===== MODES =====
+  let filterModesQuery = '';
+  function renderModes(){
+    const container = document.getElementById('modes');
+    container.innerHTML = '';
+    const q = filterModesQuery.trim().toLowerCase();
+    Object.entries(availableModes).forEach(([key,meta])=>{
+      const hay = `${key} ${meta.desc} ${(meta.tags||[]).join(' ')}`.toLowerCase();
+      if(q && !hay.includes(q)) return;
+      const active = currentConfig.modes.has(key);
+      const html = `
+        <div class="chip ${active?'active':''}" data-key="${key}" title="${meta.desc}">
+          <input type="checkbox" style="margin-top:.2rem" ${active?'checked':''}>
+          <div><strong>${labelize(key)}</strong><small>${meta.desc}</small></div>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', html);
+    });
+    container.querySelectorAll('.chip').forEach(chip=>{
+      const key = chip.dataset.key;
+      chip.addEventListener('click',(e)=>{ if(e.target.tagName.toLowerCase()==='input') return; toggleMode(key); });
+      chip.querySelector('input').addEventListener('change', ()=> toggleMode(key));
+    });
+  }
+  function toggleMode(key){
+    if(currentConfig.modes.has(key)) currentConfig.modes.delete(key); else currentConfig.modes.add(key);
+    renderModes(); liveUpdate();
+  }
+
+  // ===== VALIDATION =====
+  function validateConfiguration(){
+    const box = document.getElementById('validationWarnings');
+    const warns = [];
+    const p = currentConfig.psychomechanics;
+    if(p.aggression>75 && p.empathy<30) warns.push('Wysoka asertywność z niską empatią może brzmieć obcesowo.');
+    if(p.creativity>85 && p.analytical<35) warns.push('Bardzo wysoka kreatywność z niską analitycznością = ryzyko halucynacji.');
+    if(currentConfig.traits.size===0) warns.push('Brak wybranych cech — dodaj przynajmniej jedną.');
+    if(!currentConfig.redTeamMode) warns.push('Wyłączone bezpieczeństwo Red Team — zachowaj ostrożność.');
+    conflictRules.forEach(r=>{ try{ if(r.test(currentConfig)) warns.push(r.msg); }catch{} });
+    if(warns.length){
+      box.style.display='block';
+      box.innerHTML = warns.map(w=>`<div class="warning-item">⚠️ ${w}</div>`).join('');
+    } else { box.style.display='none'; box.innerHTML=''; }
+  }
+
+  // ===== EXPORT =====
+  function langPack(){ return langPacks[currentConfig.language] || langPacks.polish; }
+  function buildPrompt(){
+    const t = langPack();
+    const p = currentConfig.psychomechanics;
+    const psycho = Object.entries(p).map(([k,v])=>`- ${labelize(k)}: ${v}`).join('\n');
+    const traits = Array.from(currentConfig.traits).map(k=>`- ${labelize(k)}`).join('\n') || '- (brak)';
+    const modes  = Array.from(currentConfig.modes).map(k=>`- ${labelize(k)}`).join('\n') || '- (brak)';
+    const policies = [];
+    if(currentConfig.redTeamMode) policies.push('- Bezpieczeństwo: odmawiaj treści nielegalnych/szkodliwych/nienawistnych; chroń prywatność; unikaj dezinformacji.');
+    if(currentConfig.auditMode)   policies.push('- Audyt: podawaj streszczenie założeń i niepewności (wysoki poziom).');
+    const name = (document.getElementById('codeName')?.value||'').trim();
+    return `${t.systemPrefix}
+${name ? `\nNazwa kodowa: ${name}\n` : ''}
+
+${t.psychoIntro}
+${psycho}
+
+${t.traitIntro}
+${traits}
+
+${t.modeIntro}
+${modes}
+
+${t.responseGuideline}
+${policies.join('\n')}`.trim();
+  }
+  function buildPlatformPrompt(platform){
+    const base = buildPrompt();
+    const extra = {
+      chatgpt: "\n\n[OpenAI] Utrzymuj klarowne sekcje; nie ujawniaj łańcucha myśli.",
+      gemini:  "\n\n[Gemini] Zwięźle i faktograficznie; przy niepewności dopytaj.",
+      grok:    "\n\n[Grok] Suchy humor ok; oznaczaj spekulacje.",
+      claude:  "\n\n[Claude] Helpful/honest/harmless; zwięzłe struktury."
+    };
+    return (base + (extra[platform]||'')).trim();
+  }
+  function buildJSON(){
+    const obj = {
+      id: currentConfig.id, version: currentConfig.version, language: currentConfig.language,
+      codeName: (document.getElementById('codeName')?.value||'').trim(),
+      psychomechanics: currentConfig.psychomechanics,
+      traits: Array.from(currentConfig.traits),
+      modes: Array.from(currentConfig.modes),
+      redTeamMode: currentConfig.redTeamMode, auditMode: currentConfig.auditMode,
+      metadata: currentConfig.metadata
+    };
+    return JSON.stringify(obj,null,2);
+  }
+  function buildMarkdown(){ return `# Persona\n\n\`\`\`\n${buildPrompt()}\n\`\`\`\n`; }
+  function estimateTokens(){ const txt = buildPrompt(); return Math.max(50, Math.round(txt.length/4)); }
+  function estimateComplexity(){
+    const p=currentConfig.psychomechanics;
+    const base=Math.round((p.analytical+p.creativity+(currentConfig.traits.size*4)+(currentConfig.modes.size*3))/4);
+    return Math.min(100, base);
+  }
+  async function copyToClipboard(text){ try{ await navigator.clipboard.writeText(text); notify('Skopiowano do schowka','success'); }catch{ notify('Nie udało się skopiować','danger'); } }
+  function downloadFile(name, mime, data){
+    const blob = new Blob([data], {type:mime}); const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  }
+  function batchExport(){
+    const id = currentConfig.id;
+    const files = [
+      {name:`personality_${id}_uniwersalny.txt`, mime:'text/plain', data: buildPrompt()},
+      {name:`personality_${id}_chatgpt.txt`, mime:'text/plain', data: buildPlatformPrompt('chatgpt')},
+      {name:`personality_${id}_gemini.txt`, mime:'text/plain', data: buildPlatformPrompt('gemini')},
+      {name:`personality_${id}_grok.txt`, mime:'text/plain', data: buildPlatformPrompt('grok')},
+      {name:`personality_${id}_claude.txt`, mime:'text/plain', data: buildPlatformPrompt('claude')},
+      {name:`personality_${id}_profile.json`, mime:'application/json', data: buildJSON()},
+      {name:`personality_${id}.md`, mime:'text/markdown', data: buildMarkdown()}
+    ];
+    files.forEach(f=> downloadFile(f.name, f.mime, f.data));
+    notify('Wygenerowano pakiet eksportu','success');
+  }
+
+  // ===== SHARE =====
+  function toB64(str){
+    return btoa(unescape(encodeURIComponent(str))); // deprec., ale działa w browserach
+  }
+  function fromB64(b64){
+    return decodeURIComponent(escape(atob(b64)));
+  }
+  function shareLink(){
+    const snapshot = { ...currentConfig, traits:[...currentConfig.traits], modes:[...currentConfig.modes] };
+    const enc = toB64(JSON.stringify(snapshot));
+    const url = `${location.origin}${location.pathname}?cfg=${enc}`;
+    return navigator.clipboard.writeText(url);
+  }
+  function tryLoadFromURL(){
+    const params = new URLSearchParams(location.search);
+    const enc = params.get('cfg'); if(!enc) return false;
+    try{
+      const obj = JSON.parse(fromB64(enc));
+      currentConfig = { ...currentConfig, ...obj, traits:new Set(obj.traits||[]), modes:new Set(obj.modes||[]) };
+      document.getElementById('languageSelect').value = currentConfig.language;
+      document.getElementById('codeName').value = currentConfig.codeName || '';
+      return true;
+    }catch{ return false; }
+  }
+
+  // ===== HISTORY =====
+  function pushHistorySnapshot(text, tokens, tab){
+    const last = generationHistory[generationHistory.length-1];
+    const hash = simpleHash(text);
+    if(last && last.hash === hash) return;
+    const item = { id: crypto.randomUUID(), ts: Date.now(), hash, tab, tokens };
+    generationHistory.push(item);
+    if(generationHistory.length > 80) generationHistory.shift();
+    localStorage.setItem('promptHistory', JSON.stringify(generationHistory));
+  }
+  function toggleHistory(){
+    const sec = document.getElementById('historySection');
+    const list = document.getElementById('historyList');
+    if (sec.style.display === 'none'){ sec.style.display = 'block'; renderHistory(list); }
+    else sec.style.display = 'none';
+  }
+  function renderHistory(list){
+    list.innerHTML = '';
+    const items = [...generationHistory].reverse();
+    if(!items.length){ list.innerHTML = `<div class="history-item">Brak historii.</div>`; return; }
+    items.forEach(it=>{
+      const dt = new Date(it.ts);
+      const cls = it.tokens < 400 ? 'complexity-low' : it.tokens < 900 ? 'complexity-medium' : 'complexity-high';
+      const html = `
+        <div class="history-item" style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:.5rem;padding:1rem;margin-bottom:.75rem">
+          <div class="history-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+            <div class="history-timestamp" style="font-size:.9rem;color:var(--text-secondary)">${dt.toLocaleString()}</div>
+            <span class="complexity-indicator ${cls}" style="padding:.25rem .5rem;border-radius:.25rem;font-size:.75rem;font-weight:700;background:${cls==='complexity-low'?'var(--success)':cls==='complexity-medium'?'var(--warning)':'var(--danger)'};color:#fff">${it.tokens} tok</span>
+          </div>
+          <div style="font-size:.9rem;color:var(--text-secondary)">Karta: ${it.tab}</div>
+        </div>`;
+      list.insertAdjacentHTML('beforeend', html);
+    });
+  }
+  function simpleHash(str){ let h=0,i,chr; for(i=0;i<str.length;i++){ chr=str.charCodeAt(i); h=((h<<5)-h)+chr; h|=0;} return h; }
+
+  // ===== UI UPDATE =====
+  function updatePreview(){
+    const preview = document.getElementById('preview');
+    const text = currentTab==='json' ? buildJSON()
+               : currentTab==='md' ? buildMarkdown()
+               : currentTab==='universal' ? buildPrompt()
+               : buildPlatformPrompt(currentTab);
+    preview.textContent = text;
+    const tokens = estimateTokens();
+    pushHistorySnapshot(text, tokens, currentTab);
+  }
+  function updateMetrics(){
+    const m = document.getElementById('metrics');
+    const tkn = estimateTokens();
+    const compl = estimateComplexity();
+    const traitsCount = currentConfig.traits.size;
+    const modesCount = currentConfig.modes.size;
+    const risk = currentConfig.psychomechanics.risk;
+    m.innerHTML = `
+      <div class="metric"><div class="metric-value">${traitsCount}</div><div class="metric-label">Cech aktywnych</div></div>
+      <div class="metric"><div class="metric-value">${modesCount}</div><div class="metric-label">Trybów aktywnych</div></div>
+      <div class="metric"><div class="metric-value">${tkn}</div><div class="metric-label">Szac. tokenów</div></div>
+      <div class="metric"><div class="metric-value">${compl}</div><div class="metric-label">Złożoność</div></div>
+      <div class="metric"><div class="metric-value">${risk}</div><div class="metric-label">Tolerancja ryzyka</div></div>
+    `;
+  }
+  function validateAndRefresh(){ validateConfiguration(); updatePreview(); updateMetrics(); saveAutosave(); }
+  function liveUpdate(){ currentConfig.modified = Date.now(); validateAndRefresh(); }
+
+  // ===== HIGH-LEVEL ACTIONS =====
+  function quickStart(){
+    fx.on();
+    setTimeout(()=>{
+      const keys = Object.keys(availableTraits);
+      const pick = (n)=>{ const s=new Set(); while(s.size<n) s.add(keys[Math.floor(Math.random()*keys.length)]); return s; };
+      currentConfig.traits = pick(4 + Math.floor(Math.random()*4));
+      Object.keys(currentConfig.psychomechanics).forEach(k=>{ currentConfig.psychomechanics[k] = 40 + Math.round(Math.random()*40); });
+      document.getElementById('codeName').value = namePool[Math.floor(Math.random()*namePool.length)];
+      liveUpdate(); fx.off();
+    }, 550);
+  }
+  function chaosMode(){
+    fx.on();
+    setTimeout(()=>{
+      Object.keys(currentConfig.psychomechanics).forEach(k=>{ currentConfig.psychomechanics[k] = Math.round(Math.random()*100); });
+      currentConfig.traits = new Set(sample(Object.keys(availableTraits), 8 + Math.floor(Math.random()*6)));
+      currentConfig.modes  = new Set(sample(Object.keys(availableModes), 8 + Math.floor(Math.random()*6)));
+      document.getElementById('codeName').value = namePool[Math.floor(Math.random()*namePool.length)] + "-X";
+      liveUpdate(); fx.off();
+    }, 650);
+  }
+
+  // ===== INIT UI =====
+  function initUI(){
+    // Motyw/układ
+    applyTheme(localStorage.getItem('pf_theme') || 'dark');
+    applyLayout(localStorage.getItem('pf_layout') || 'full');
+    document.getElementById('themeSelect').value = localStorage.getItem('pf_theme') || 'dark';
+    document.getElementById('layoutSelect').value = localStorage.getItem('pf_layout') || 'full';
+
+    // Archetypy select
+    const sel = document.getElementById('archetypeSelect');
+    Object.keys(archetypes).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
+    sel.addEventListener('change', ()=>{
+      const k = sel.value; const a = archetypes[k]; document.getElementById('archetypeDesc').textContent = a ? a.desc : '';
+    });
+
+    renderSliders(); renderTraits(); renderModes();
+
+    if(!tryLoadFromURL()) loadAutosave();
+
+    // Live preview hook
+    document.addEventListener('live:update', validateAndRefresh);
+
+    // Identity
+    document.getElementById('languageSelect').addEventListener('change', e=>{ currentConfig.language = e.target.value; liveUpdate(); });
+    document.getElementById('codeName').addEventListener('input', ()=> liveUpdate());
+
+    // Archetypy
+    document.getElementById('btnApplyArchetype').addEventListener('click', ()=>{
+      const key = document.getElementById('archetypeSelect').value; const a = archetypes[key]; if(!a) return;
+      currentConfig.codeName = a.codeName || currentConfig.codeName;
+      currentConfig.psychomechanics = { ...currentConfig.psychomechanics, ...(a.psychomechanics||{}) };
+      currentConfig.traits = new Set(a.traits||[]);
+      currentConfig.modes  = new Set(a.modes||[]);
+      document.getElementById('codeName').value = currentConfig.codeName || '';
+      liveUpdate(); notify(`Zastosowano archetyp: ${key}`,'success');
+      document.getElementById('archetypeDesc').textContent = a.desc || '';
+    });
+    document.getElementById('btnRandomArchetype').addEventListener('click', ()=>{
+      const keys = Object.keys(archetypes); const key = keys[Math.floor(Math.random()*keys.length)];
+      document.getElementById('archetypeSelect').value = key;
+      document.getElementById('btnApplyArchetype').click();
+    });
+    document.getElementById('btnRandomName').addEventListener('click', ()=>{
+      document.getElementById('codeName').value = namePool[Math.floor(Math.random()*namePool.length)]; liveUpdate();
+    });
+
+    // Filtry
+    document.getElementById('filterTraits').addEventListener('input', e=>{ filterTraitsQuery = e.target.value; renderTraits(); });
+    document.getElementById('filterModes').addEventListener('input', e=>{ filterModesQuery = e.target.value; renderModes(); });
+
+    // Custom trait
+    document.getElementById('btnAddTrait').addEventListener('click', ()=>{
+      const val = document.getElementById('customTrait').value.trim(); if(!val) return;
+      addCustomTrait(val); document.getElementById('customTrait').value='';
+    });
+
+    // Bezpieczeństwo
+    document.getElementById('redTeamMode').addEventListener('change', e=>{ currentConfig.redTeamMode = e.target.checked; liveUpdate(); });
+    document.getElementById('auditMode').addEventListener('change', e=>{ currentConfig.auditMode = e.target.checked; liveUpdate(); });
+
+    // Zakładki
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        btn.classList.add('active'); currentTab = btn.dataset.tab; updatePreview();
+      });
+    });
+
+    // Eksport / Import
+    document.getElementById('btnCopy').addEventListener('click', ()=>{
+      const text = currentTab==='json' ? buildJSON()
+                 : currentTab==='md' ? buildMarkdown()
+                 : currentTab==='universal' ? buildPrompt()
+                 : buildPlatformPrompt(currentTab);
+      copyToClipboard(text);
+    });
+    document.getElementById('btnDownload').addEventListener('click', ()=>{
+      const isJSON = currentTab==='json', isMD = currentTab==='md';
+      const text = isJSON ? buildJSON() : isMD ? buildMarkdown()
+                 : currentTab==='universal' ? buildPrompt()
+                 : buildPlatformPrompt(currentTab);
+      const ext = isJSON ? 'json' : isMD ? 'md' : 'txt';
+      const name = `personality_${currentConfig.id}_${currentTab}.${ext}`;
+      const mime = isJSON ? 'application/json' : isMD ? 'text/markdown' : 'text/plain';
+      downloadFile(name, mime, text);
+    });
+    document.getElementById('btnBatch').addEventListener('click', batchExport);
+
+    document.getElementById('btnExport').addEventListener('click', ()=> {
+      const j = buildJSON();
+      downloadFile(`personality_${currentConfig.id}_profile.json`, 'application/json', j);
+    });
+    document.getElementById('btnImportOpen').addEventListener('click', ()=> document.getElementById('importFile').click());
+    document.getElementById('importFile').addEventListener('change', (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = ()=>{
+        try{
+          const obj = JSON.parse(r.result);
+          currentConfig.id = obj.id || crypto.randomUUID();
+          currentConfig.version = obj.version || '3.4.0';
+          currentConfig.language = obj.language || 'polish';
+          currentConfig.codeName = obj.codeName || '';
+          currentConfig.psychomechanics = { ...currentConfig.psychomechanics, ...(obj.psychomechanics||{}) };
+          currentConfig.traits = new Set(obj.traits||[]);
+          currentConfig.modes  = new Set(obj.modes||[]);
+          currentConfig.redTeamMode = !!obj.redTeamMode;
+          currentConfig.auditMode = !!obj.auditMode;
+          currentConfig.metadata = { ...currentConfig.metadata, ...(obj.metadata||{}) };
+          document.getElementById('languageSelect').value = currentConfig.language;
+          document.getElementById('codeName').value = currentConfig.codeName || '';
+          liveUpdate(); notify('Wczytano preset','success');
+        }catch{ notify('Błędny plik','danger'); }
+        e.target.value='';
+      };
+      r.readAsText(f);
+    });
+
+    // Historia / Ryzyka
+    document.getElementById('btnHistory').addEventListener('click', toggleHistory);
+    document.getElementById('btnAnalyze').addEventListener('click', ()=> validateConfiguration());
+
+    // Motywy / Układ
+    document.getElementById('themeSelect').addEventListener('change', e=> applyTheme(e.target.value));
+    document.getElementById('layoutSelect').addEventListener('change', e=> applyLayout(e.target.value));
+
+    // Szybki start / Chaos
+    document.getElementById('btnQuickStart').addEventListener('click', quickStart);
+    document.getElementById('btnChaos').addEventListener('click', chaosMode);
+
+    // Share
+    document.getElementById('btnShare').addEventListener('click', ()=>{
+      shareLink().then(()=> notify('Skopiowano link do schowka','success'));
+    });
+
+    // Skróty
+    document.addEventListener('keydown', e=>{
+      const k = e.key.toLowerCase();
+      if(e.ctrlKey && k==='s'){ e.preventDefault(); const j=buildJSON(); downloadFile(`personality_${currentConfig.id}_profile.json`,'application/json',j); }
+      if(e.ctrlKey && k==='c'){ e.preventDefault(); navigator.clipboard.writeText(buildPrompt()); }
+      if(e.ctrlKey && k==='b'){ e.preventDefault(); batchExport(); }
+    });
+
+    // Start
+    updatePreview(); updateMetrics(); validateConfiguration();
+  }
+
+  // ===== WIRING =====
+  window.addEventListener('DOMContentLoaded', ()=>{
+    initUI();
+    setInterval(saveAutosave, 30000);
+  });
+
+})(); // end IIFE
+</script>
+</body>
+</html>
